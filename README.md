@@ -54,3 +54,34 @@ Once the server is running, you can access:
 Press `Ctrl+C` to stop the server.
 
 For subsequent runs, navigate to the `backend` directory, activate the virtual environment, and start the server. Reinstall dependencies whenever `requirements.txt` changes.
+
+## Launch database
+
+Install Docker with Docker Compose before proceeding.
+
+1. Create a `.env` file in the project root and configure the database credentials:
+   ```dotenv
+   POSTGRES_DB=finly
+   POSTGRES_USER=finly
+   POSTGRES_PASSWORD=replace_with_your_password
+   ```
+   Replace the example password with your own. Add `.env` to `.gitignore` to keep credentials out of version control.
+2. Start the database from the project root:
+   ```bash
+   docker compose up -d db
+   ```
+3. Check the container status:
+   ```bash
+   docker compose ps
+   ```
+The database is available to applications running on your computer at `localhost:54321`. PostgreSQL uses port `5432` inside the container.
+To open the PostgreSQL console:
+```bash
+docker compose exec db sh -c 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB"'
+```
+To stop the database:
+```bash
+docker compose stop db
+```
+
+Database data is stored in the `postgres_data` volume and persists across container recreation. The credentials in `.env` are used during the first initialization; changing them later does not update existing database users or passwords.
