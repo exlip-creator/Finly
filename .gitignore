@@ -1,0 +1,17 @@
+# Virtual environment
+backend/.venv/
+
+# Pycharm settings
+.idea/
+
+# Python service files
+__pycache__/
+
+# Loval settings and secrets
+.env
+.env.*
+!.env.example
+
+# Modules cache
+.pytes_cache/
+.ruff_cache/
