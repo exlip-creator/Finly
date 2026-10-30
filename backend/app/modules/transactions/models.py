@@ -1,6 +1,6 @@
 from decimal import Decimal
 from datetime import datetime, date
-from sqlalchemy import Integer, String, Text, Numeric, Identity, ForeignKey, CheckConstraint, Date, DateTime, func
+from sqlalchemy import Integer, String, Text, Numeric, Identity, ForeignKey, CheckConstraint, Date, DateTime, func, Index
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.db.base import Base
@@ -61,10 +61,16 @@ class Transaction(Base):
     __table_args__ = (
         CheckConstraint(
             "amount > 0 AND amount <> 'NaN'::numeric",
-            name="ck_transactions_amount_positive"
+            name="ck_transactions_amount"
         ),
         CheckConstraint(
             "kind IN ('income', 'expense')",
             name="ck_transactions_kind"
+        ),
+        Index(
+            "idx_transactions_user_occured_at_id",
+            "user_id",
+            "occurred_at",
+            "id"
         )
     )
