@@ -12,13 +12,13 @@ class Settings(BaseSettings):
         hide_input_in_errors=True
     )
 
-    postgres_db: str
-    postgres_user: str
-    postgres_password: SecretStr
-    db_host: str
-    db_port: int = Field(ge=1, le=65535)
+    POSTGRES_DB: str
+    POSTGRES_USER: str
+    POSTGRES_PASSWORD: SecretStr
+    DB_HOST: str
+    DB_PORT: int = Field(ge=1, le=65535)
 
-    app_name: str = "Finly API"
+    APP_NAME: str = "Finly API"
 
 
 settings = Settings()

@@ -5,11 +5,11 @@ from app.core.config import settings
 
 database_url = URL.create(
     drivername="postgresql+psycopg",
-    username=settings.postgres_user,
-    password=settings.postgres_password.get_secret_value(),
-    host=settings.db_host,
-    port=settings.db_port,
-    database=settings.postgres_db,
+    username=settings.POSTGRES_USER,
+    password=settings.POSTGRES_PASSWORD.get_secret_value(),
+    host=settings.DB_HOST,
+    port=settings.DB_PORT,
+    database=settings.POSTGRES_DB,
 )
 
 engine = create_async_engine(database_url)
