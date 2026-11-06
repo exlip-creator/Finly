@@ -1,5 +1,6 @@
 from sqlalchemy import URL
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
+from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
+from collections.abc import AsyncIterator
 
 from app.core.config import settings
 
@@ -18,3 +19,7 @@ async_session_factory = async_sessionmaker(
     bind=engine,
     expire_on_commit=False,
 )
+
+async def get_session() -> AsyncIterator[AsyncSession]:
+    async with async_session_factory() as session:
+        yield session

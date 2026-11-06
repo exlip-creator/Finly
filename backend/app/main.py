@@ -1,9 +1,19 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends, HTTPException
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import text
 
+from app.db.session import get_session
 from app.core.config import settings
 
-app = FastAPI(title=settings.app_name)
+app = FastAPI(title=settings.APP_NAME)
 
-@app.get("/health", tags=["health"])
-def health_check() -> dict:
-    return {"status": "ok"}
+@app.get("/health/db", tags=["health"])
+async def db_health_check(session: AsyncSession = Depends(get_session)) -> dict:
+    try:
+        result = await session.execute(text("SELECT 1;"))
+        return {"status": "ok", "database": result.scalar_one()}
+    except Exception as error:
+        raise HTTPException(
+            status_code=503,
+            detail="Database unavailable"
+        ) from error
