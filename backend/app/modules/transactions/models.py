@@ -68,7 +68,7 @@ class Transaction(Base):
             name="ck_transactions_kind"
         ),
         Index(
-            "idx_transactions_user_occured_at_id",
+            "idx_transactions_user_occurred_at_id",
             "user_id",
             "occurred_at",
             "id"
