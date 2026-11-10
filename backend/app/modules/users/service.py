@@ -10,7 +10,8 @@ class EmailAlreadyRegisteredError(Exception):
     pass
 
 async def register_user(session: AsyncSession, user_data: UserCreate) -> User:
-    password_hash = await to_thread(get_password_hash, user_data.password.get_secret_value())
+    password = user_data.password.get_secret_value()
+    password_hash = await to_thread(get_password_hash, password)
 
     query = (
         insert(User)
