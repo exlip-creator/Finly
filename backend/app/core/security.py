@@ -12,8 +12,6 @@ def get_password_hash(password: str) -> str:
 def verify_password(password: str, password_hash: str) -> bool:
     return password_hasher.verify(password, password_hash)
 
-
-
 def create_access_token(user_id: int) -> str:
     meta_data = {
         "sub": str(user_id),

@@ -22,6 +22,7 @@ pycparser==3.12
 pydantic==2.14.1
 pydantic-settings==2.16.2
 pydantic_core==2.50.1
+PyJWT==2.15.1
 python-dotenv==1.2.4
 SQLAlchemy==2.1.6
 starlette==1.10.0

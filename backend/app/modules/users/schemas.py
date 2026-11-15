@@ -1,5 +1,6 @@
 from pydantic import BaseModel, EmailStr, SecretStr, Field, field_validator, ConfigDict
 from datetime import datetime
+from typing import Literal
 
 class UserCreate(BaseModel):
     email: EmailStr
@@ -25,3 +26,7 @@ class UserLogin(BaseModel):
     @staticmethod
     def normalize_email(email: EmailStr) -> EmailStr:
         return email.strip().lower()
+
+class TokenResponse(BaseModel):
+    access_token: str
+    token_type: Literal["bearer"] = "bearer"
