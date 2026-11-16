@@ -11,7 +11,7 @@ from app.core.security import create_access_token
 
 user_router = APIRouter(prefix="/auth", tags=["authentication"])
 
-@user_router.post("/register", status_code=status.HTTP_201_CREATED, response_model=UserRead, tags=["authentication"])
+@user_router.post("/register", status_code=status.HTTP_201_CREATED, response_model=UserRead)
 async def registrate(user_data: UserCreate, session: AsyncSession = Depends(get_session)) -> UserRead:
     try:
         user = await register_user(session, user_data)
@@ -22,7 +22,7 @@ async def registrate(user_data: UserCreate, session: AsyncSession = Depends(get_
             detail="Email already registered"
         ) from error
 
-@user_router.post("/login", response_model=TokenResponse, tags=["authentication"])
+@user_router.post("/login", response_model=TokenResponse)
 async def login(user_data: UserLogin, session: AsyncSession = Depends(get_session)) -> TokenResponse:
     try:
         user = await login_user(session, user_data)
@@ -34,6 +34,6 @@ async def login(user_data: UserLogin, session: AsyncSession = Depends(get_sessio
             detail="Invalid username or password",
         ) from error
 
-@user_router.get("/me", response_model=UserRead, tags=["authentication"])
+@user_router.get("/me", response_model=UserRead)
 async def read_me(user: User = Depends(get_current_user)) -> UserRead:
     return UserRead.model_validate(user)

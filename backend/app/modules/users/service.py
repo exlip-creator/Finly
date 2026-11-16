@@ -19,9 +19,9 @@ async def register_user(session: AsyncSession, user_data: UserCreate) -> User:
 
     query = (
         insert(User)
-             .values(email=user_data.email, password_hash=password_hash)
-             .on_conflict_do_nothing(index_elements=[User.email])
-             .returning(User)
+            .values(email=user_data.email, password_hash=password_hash)
+            .on_conflict_do_nothing(index_elements=[User.email])
+            .returning(User)
     )
 
     async with session.begin():
