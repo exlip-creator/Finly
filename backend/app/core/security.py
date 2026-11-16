@@ -21,3 +21,16 @@ def create_access_token(user_id: int) -> str:
     secret_key = settings.JWT_SECRET_KEY.get_secret_value()
 
     return jwt.encode(meta_data, secret_key, algorithm="HS256")
+
+def decode_access_token(token: str) -> int:
+    meta_data = jwt.decode(
+        token,
+        settings.JWT_SECRET_KEY.get_secret_value(),
+        algorithms=["HS256"],
+        options={
+            "require": ["sub", "exp"]
+        }
+    )
+
+    return int(meta_data["sub"])
+

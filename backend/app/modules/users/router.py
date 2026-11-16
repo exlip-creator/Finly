@@ -2,6 +2,8 @@ from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 
+from app.modules.users.dependencies import get_current_user
+from app.modules.users.models import User
 from app.modules.users.schemas import UserCreate, UserRead, UserLogin, TokenResponse
 from app.db.session import get_session
 from app.modules.users.service import register_user, EmailAlreadyRegisteredError, login_user, InvalidCredentialsError
@@ -31,3 +33,7 @@ async def login(user_data: UserLogin, session: AsyncSession = Depends(get_sessio
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid username or password",
         ) from error
+
+@user_router.get("/me", response_model=UserRead, tags=["authentication"])
+async def read_me(user: User = Depends(get_current_user)) -> UserRead:
+    return UserRead.model_validate(user)
