@@ -10,10 +10,12 @@ from app.db.session import get_session
 from app.core.config import settings
 from app.modules.users.router import user_router
 from app.modules.accounts.router import accounts_router
+from app.modules.categories.router import categories_router
 
 app = FastAPI(title=settings.APP_NAME)
 app.include_router(user_router)
 app.include_router(accounts_router)
+app.include_router(categories_router)
 
 @app.exception_handler(RequestValidationError)
 async def validation_error_handler(_request: Request, error: RequestValidationError) -> JSONResponse:

@@ -1,3 +1,4 @@
+from typing import Literal
 from sqlalchemy import Integer, String, Boolean, Identity, ForeignKey, CheckConstraint, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -5,6 +6,12 @@ from app.db.base import Base
 
 class Category(Base):
     __tablename__ = 'categories'
+
+    def __init__(self, user_id: int, name: str, kind: Literal["income", "expense"]) -> None:
+        super().__init__()
+        self.user_id = user_id
+        self.name = name
+        self.kind = kind
 
     id: Mapped[int] = mapped_column(
         Integer,
