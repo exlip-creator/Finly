@@ -10,6 +10,7 @@ class AccountRead(BaseModel):
     start_balance: Decimal
     currency: str
     created_at: datetime
+    is_archived: bool
 
 class AccountCreate(BaseModel):
     model_config = ConfigDict(str_strip_whitespace=True)
@@ -21,3 +22,6 @@ class AccountUpdate(BaseModel):
     model_config = ConfigDict(str_strip_whitespace=True)
 
     name: str = Field(min_length=1, max_length=50)
+
+class AccountArchive(BaseModel):
+    is_archived: bool

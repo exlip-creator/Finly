@@ -3,19 +3,20 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 
 from app.db.session import get_session
-from app.modules.accounts.schemas import AccountCreate, AccountRead, AccountUpdate
+from app.modules.accounts.schemas import AccountCreate, AccountRead, AccountUpdate, AccountArchive
 from app.modules.users.models import User
-from app.modules.accounts.service import get_accounts, create_account, get_account_by_id, update_account, NoSuchAccount, delete_account
+from app.modules.accounts.service import get_accounts, create_account, get_account_by_id, update_account, NoSuchAccount, delete_account, archive_account
 from app.modules.users.dependencies import get_current_user
 
 accounts_router = APIRouter(prefix="/accounts", tags=["accounts"])
 
 @accounts_router.get("", response_model=list[AccountRead])
 async def read_accounts(
+        include_archived: bool = False,
         current_user: User = Depends(get_current_user),
         session: AsyncSession = Depends(get_session)
 ) -> list[AccountRead]:
-    accounts = await get_accounts(current_user.id, session)
+    accounts = await get_accounts(include_archived, current_user.id, session)
     return list(AccountRead.model_validate(acc) for acc in accounts)
 
 @accounts_router.post("", response_model=AccountRead, status_code=status.HTTP_201_CREATED)
@@ -64,5 +65,18 @@ async def delete_account_by_id(
     try:
         await delete_account(account_id, current_user.id, session)
         return None
+    except NoSuchAccount:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Account not found")
+
+@accounts_router.patch("/{account_id}/archive", response_model=AccountRead)
+async def archive_account_by_id(
+        account_id: int,
+        archive_request: AccountArchive,
+        current_user: User = Depends(get_current_user),
+        session: AsyncSession = Depends(get_session)
+) -> AccountRead:
+    try:
+        account = await archive_account(account_id, current_user.id, session, archive_request.is_archived)
+        return AccountRead.model_validate(account)
     except NoSuchAccount:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Account not found")

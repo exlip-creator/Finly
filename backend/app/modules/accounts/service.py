@@ -21,8 +21,12 @@ async def create_account(account_data: AccountCreate, user_id: int, session: Asy
     return account
 
 
-async def get_accounts(user_id: int, session: AsyncSession) -> list[Account]:
+async def get_accounts(include_archived: bool, user_id: int, session: AsyncSession) -> list[Account]:
     query = select(Account).where(Account.user_id == user_id).order_by(Account.id)
+
+    if not include_archived:
+        query = query.where(Account.is_archived.is_(False))
+
     accounts = await session.execute(query)
     return list(accounts.scalars().all())
 
@@ -55,3 +59,14 @@ async def delete_account(account_id: int, user_id: int, session: AsyncSession) -
     await session.commit()
 
     return None
+
+async def archive_account(account_id: int, user_id: int, session: AsyncSession, is_archived: bool) -> Account:
+    account = await get_account_by_id(account_id, user_id, session)
+
+    if account is None:
+        raise NoSuchAccount
+
+    account.is_archived = is_archived
+    await session.commit()
+
+    return account
