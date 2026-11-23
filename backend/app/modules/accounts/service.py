@@ -13,6 +13,7 @@ async def create_account(account_data: AccountCreate, user_id: int, session: Asy
         user_id=user_id,
         name=account_data.name,
         start_balance=account_data.start_balance,
+        currency=account_data.currency,
     )
 
     session.add(account)
