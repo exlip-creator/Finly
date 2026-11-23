@@ -9,7 +9,7 @@ from app.db.base import Base
 class Account(Base):
     __tablename__ = 'accounts'
 
-    def __init__(self, user_id: int, name: str, start_balance: Decimal, currency: Literal["RUS"]) -> None:
+    def __init__(self, user_id: int, name: str, start_balance: Decimal, currency: Literal["RUS"] = "RUS") -> None:
         super().__init__()
         self.id = user_id
         self.name = name
