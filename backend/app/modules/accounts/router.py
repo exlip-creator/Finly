@@ -41,7 +41,7 @@ async def read_account_by_id(
     return AccountRead.model_validate(account)
 
 
-@accounts_router.post("/{account_id}", response_model=AccountRead)
+@accounts_router.patch("/{account_id}", response_model=AccountRead)
 async def update_account_by_id(
         update_data: AccountUpdate,
         account_id: int,
